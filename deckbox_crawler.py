@@ -166,8 +166,10 @@ class DeckboxCrawler:
         card["tooltip"] = self._HTTP + self._DECKBOX_DOMAIN + self._TOOLTIP.replace("<cardname>", urllib.parse.quote(card["name"]))
         card["editions"] = []
         for edition in self._page(".card_properties tr:eq(1) td:last img").items():
+            search = re.search(".*\/(\w*)_(\w)\.jpg$", edition.attr("src"))
             card["editions"].append({
-                "code": re.search(".*/(.*)_.\.jpg$", edition.attr("src")).group(1),
+                "code": search.group(1),
+                "rarity":search.group(2),
                 "name": edition.attr("data-title")
             })
         #Card type depending fields
